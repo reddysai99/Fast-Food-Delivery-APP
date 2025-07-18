@@ -3,7 +3,7 @@ import {FlatList, Image, Pressable, ScrollView, Text, TouchableOpacity, View} fr
 import {images, offers} from "@/constants";
 import {Fragment} from "react";
 import cn from 'clsx'
-import CartButton from "@/app/Components/CartButton";
+import CartButton from "@/Components/CartButton";
 
 export default function Index() {
     return (
