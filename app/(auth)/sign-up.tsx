@@ -1,8 +1,9 @@
-import {View, Text, Button, Alert} from 'react-native'
+import {View, Text, Alert} from 'react-native'
 import React, {useState} from 'react'
 import {Link, router} from "expo-router";
 import CustomInput from "@/Components/CustomInput";
 import CustomButton from "@/Components/CustomButton";
+import {createUser} from "@/lib/appwrite";
 
 
 const Signup = () => {
@@ -10,14 +11,13 @@ const Signup = () => {
     const [form, setForm] = useState({ name:'' ,email: '', password: ''});
 
     const submit = async () => {
-        if(!form.name || !form.email || !form.password) return Alert.alert('Error', 'Please Enter valid Email and Password')
+        const { name, email, password } = form;
+        if(!name || !email || !password) return Alert.alert('Error', 'Please Enter valid Email and Password')
 
         setIsSubmitting(true)
 
         try {
-            // Call Appwrite Signup Function
-
-            Alert.alert('Success', 'User Signed up Successfully');
+            await createUser({ name, email, password });
             router.push('/');
         } catch (error: any) {
             Alert.alert('Error' ,error.message);
@@ -30,20 +30,20 @@ const Signup = () => {
             <CustomInput
                 placeholder="Enter your full name"
                 value={form.name}
-                onChangeText={(text) => setForm( (prevState) => ({  ...prevState, name: text}))}
+                onChangeText={(text) => setForm((prev) => ({ ...prev, name: text }))}
                 label="Full Name"
             />
             <CustomInput
                 placeholder="Enter your email"
                 value={form.email}
-                onChangeText={(text) => setForm( (prevState) => ({  ...prevState, email: text}))}
+                onChangeText={(text) => setForm((prev) => ({ ...prev, email: text }))}
                 label="Email"
                 keyboardType="email-address"
             />
             <CustomInput
                 placeholder="Enter your password"
                 value={form.password}
-                onChangeText={(text) => setForm( (prevState) => ({  ...prevState, password: text}))}
+                onChangeText={(text) => setForm((prev) => ({ ...prev, password: text }))}
                 label="Password"
                 secureTextEntry={true}
             />

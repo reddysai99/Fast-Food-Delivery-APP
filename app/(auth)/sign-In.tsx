@@ -3,6 +3,8 @@ import React, {useState} from 'react'
 import {Link, router} from "expo-router";
 import CustomInput from "@/Components/CustomInput";
 import CustomButton from "@/Components/CustomButton";
+import {signIn} from "@/lib/appwrite";
+import * as Sentry from "@sentry/react-native";
 
 
 const SignIn = () => {
@@ -10,17 +12,17 @@ const SignIn = () => {
     const [form, setForm] = useState({ email: '', password: ''});
 
     const submit = async () => {
-        if(!form.email || !form.password) return Alert.alert('Error', 'Please Enter valid Email and Password')
+        const { email, password } = form;
+        if(!email || !password) return Alert.alert('Error', 'Please Enter valid Email and Password')
 
         setIsSubmitting(true)
 
         try {
-            // Call Appwrite Authentication Function
-
-            Alert.alert('Success', 'User Signed in Successfully');
-            router.push('/');
-        } catch (error: any) {
+            await signIn({ email, password});
+                router.push('/');
+            } catch (error: any) {
             Alert.alert('Error' ,error.message);
+            Sentry.captureEvent(error);
         } finally {
             setIsSubmitting(false);
         }

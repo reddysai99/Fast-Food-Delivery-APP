@@ -33,6 +33,14 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "sai-react-native-fooddelivery",
+          "organization": "saikumar-reddy"
+        }
       ]
     ],
     "experiments": {
