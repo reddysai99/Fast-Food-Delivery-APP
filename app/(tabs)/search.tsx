@@ -6,27 +6,32 @@ import {getCategories, getMenu} from "@/lib/appwrite";
 import {useLocalSearchParams} from "expo-router";
 import CartButton from "@/Components/CartButton";
 import cn from "clsx";
+import MenuCard from "@/Components/MenuCard";
+import {MenuItem} from "@/type";
+import SearchBar from "@/Components/SearchBar";
+import Filter from "@/Components/Filter";
+
 
 
 const Search = () => {
     const { category, query} = useLocalSearchParams<{query: string; category: string;}>()
 
-    const { data, refetch, loading } = useAppwrite({ fn: getMenu, params: { category, query, limit: 6,}});
+    const { data, refetch, loading } = useAppwrite({ fn: getMenu, params: { category, query }});
     const { data: categories} = useAppwrite({ fn: getCategories,});
 
     useEffect(() => {
-        refetch( { category, query, limit: 6,} )
+        refetch({ category, query })
     }, [ category, query ]);
 
     return (
         <SafeAreaView className="bg-white h-full">
             <FlatList
-                data={data}
+                data={data ?? []}
                 renderItem={({ item, index}) => {
                     const isFirstRightColItem = index % 2 === 0;
                 return(
                     <View className={cn("flex-1 max-w-[48%]", !isFirstRightColItem ? 'mt-10': 'mt-0')}>
-                        <Text>Menu Card</Text>
+                    <MenuCard item={item as MenuItem}/>
                     </View>
                 )
             }}
@@ -45,8 +50,8 @@ const Search = () => {
                            </View>
                             <CartButton />
                         </View>
-                        <Text> Search Input </Text>
-                        <Text> Filter </Text>
+                        <SearchBar />
+                       <Filter categories={categories} />
                     </View>
                 )}
                 ListEmptyComponent={() => !loading && <Text> We will add this item in the Menu Soon 😊 </Text>}
