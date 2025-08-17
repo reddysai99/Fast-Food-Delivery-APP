@@ -18,7 +18,7 @@
 
 @layer components {
     .cart-btn {
-        @apply flex items-center justify-center size-10 rounded-full bg-dark-100;
+        @apply flex items-center justify-center size-10 rounded-full bg-dark-100 shadow-md shadow-black/10;
     }
 
     .cart-badge {

@@ -103,3 +103,58 @@ export const getCategories = async (): Promise<Category[]> => {
         throw new Error(e as string);
     }
 }
+
+export const logout = async () => {
+    try {
+        await account.deleteSession('current');
+    } catch (e) {
+        throw new Error(e as string);
+    }
+}
+
+export const updateUserProfile = async (
+    {
+        documentId,
+        name,
+        mobile,
+        avatar,
+        address,
+    }: { documentId: string; name?: string; mobile?: number; avatar?: string; address?: string }
+) => {
+    try {
+        const payload: Record<string, any> = {};
+        if (typeof name !== 'undefined') payload.name = name;
+        if (typeof mobile !== 'undefined') payload.mobile = mobile;
+        if (typeof avatar !== 'undefined') payload.avatar = avatar;
+        if (typeof address !== 'undefined') payload.address = address;
+
+        return await databases.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.UserCollectionId,
+            documentId,
+            payload
+        );
+    } catch (e) {
+        throw new Error(e as string);
+    }
+}
+
+// Upload an image from a local file URI to Appwrite Storage and return a public view URL
+export const uploadImageFromUri = async (uri: string, filename?: string): Promise<{ fileId: string; url: string }> => {
+    try {
+        const created = await storage.createFile(
+            appwriteConfig.bucketId,
+            ID.unique(),
+            {
+                uri,
+                name: filename || `avatar-${Date.now()}.jpg`,
+                type: 'image/jpeg',
+            } as any
+        );
+        const fileId = created.$id;
+        const url = storage.getFileView(appwriteConfig.bucketId, fileId).toString();
+        return { fileId, url };
+    } catch (e) {
+        throw new Error(e as string);
+    }
+}

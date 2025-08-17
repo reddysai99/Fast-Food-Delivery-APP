@@ -20,6 +20,8 @@ export interface User extends Models.Document {
     name: string;
     email: string;
     avatar: string;
+    mobile?: number; // Stored as Appwrite integer
+    address?: string;
 }
 
 export interface CartCustomization {
